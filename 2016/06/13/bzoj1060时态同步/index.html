@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>5月做题记录 | wtl&#39;s blog</title>
+    <title>bzoj1060时态同步 | wtl&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="wtl">
     
-    <meta name="description" content="5.6bzoj 1025 找规律+DPbzoj 1045 中位数的性质bzoj 1024 暴搜bzoj 4551 至今Wrong_Answer，orz">
+    <meta name="description" content="原题戳这感觉自己还是太弱了，一天刷不了几道题。。。这题树形DP还是比较明显的，然后并不会。。。膜拜了hzwer的题解后明白了：对于一个点x，设f[x]是x点到以x为根的子树中最深的点的距离。那么每个点可以通过f[x]=max(f[e.to]+e.v)求出f[x]，而ans则累加f[x]-f[e.to">
     
     
     
@@ -69,15 +69,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/05/06/5月做题记录/" title="5月做题记录" itemprop="url">5月做题记录</a>
+      <a href="/2016/06/13/bzoj1060时态同步/" title="bzoj1060时态同步" itemprop="url">bzoj1060时态同步</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://wtl666wtl.github.io" title="wtl">wtl</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-05-06T12:02:15.000Z" itemprop="datePublished">2016-05-06</time>
-    更新日期:<time datetime="2016-05-06T12:06:25.138Z" itemprop="dateModified">2016-05-06</time>
+    <time datetime="2016-06-13T11:56:41.000Z" itemprop="datePublished">2016-06-13</time>
+    更新日期:<time datetime="2016-06-13T12:12:35.304Z" itemprop="dateModified">2016-06-13</time>
     
   </p>
 </header>
@@ -89,7 +89,7 @@
 		
 		</div>
 		
-		<p><strong>5.6</strong><br>bzoj 1025 找规律+DP<br>bzoj 1045 中位数的性质<br>bzoj 1024 暴搜<br>bzoj 4551 至今Wrong_Answer，orz</p>
+		<p>原题戳<a href="http://www.lydsy.com/JudgeOnline/problem.php?id=1060" target="_blank" rel="external">这</a><br>感觉自己还是太弱了，一天刷不了几道题。。。<br>这题树形DP还是比较明显的，然后并不会。。。<br>膜拜了hzwer的题解后明白了：对于一个点x，设f[x]是x点到以x为根的子树中最深的点的距离。那么每个点可以通过f[x]=max(f[e.to]+e.v)求出f[x]，而ans则累加f[x]-f[e.to]-e.v的值，这样可以保证在x节点时，以x为根的子树保证试题同步。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;cstdio&gt;</span><br><span class="line">#include &lt;cstring&gt;</span><br><span class="line">#include &lt;algorithm&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">struct arr&#123;int to,ne,v;&#125;e[1000000];</span><br><span class="line">int n,rt,x,y,v,cnt,head[500001];</span><br><span class="line">long long f[500001];</span><br><span class="line">long long ans;</span><br><span class="line">inline void add(int x,int y,int v)</span><br><span class="line">&#123;</span><br><span class="line">    e[++cnt].to=y;e[cnt].ne=head[x];e[cnt].v=v;head[x]=cnt;</span><br><span class="line">    e[++cnt].to=x;e[cnt].ne=head[y];e[cnt].v=v;head[y]=cnt;</span><br><span class="line">&#125;</span><br><span class="line">inline int read()</span><br><span class="line">&#123;</span><br><span class="line">    int x=0,f=0,c=getchar();for(; c&gt;&apos;9&apos;||c&lt;&apos;0&apos;; f=(c==&apos;-&apos;),c=getchar());</span><br><span class="line">    for(; c&gt;=&apos;0&apos;&amp;&amp;c&lt;=&apos;9&apos;; c=getchar())x=(x&lt;&lt;1)+(x&lt;&lt;3)+c-&apos;0&apos;;return f?-x:x;</span><br><span class="line">&#125;</span><br><span class="line">int dfs(int x,int fa)</span><br><span class="line">&#123;</span><br><span class="line">    for(int i=head[x];i;i=e[i].ne)if(e[i].to!=fa)&#123;</span><br><span class="line">        dfs(e[i].to,x);</span><br><span class="line">        f[x]=max(f[x],f[e[i].to]+1LL*e[i].v);</span><br><span class="line">    &#125;</span><br><span class="line">    for(int i=head[x];i;i=e[i].ne)if(e[i].to!=fa)ans+=1LL*(f[x]-f[e[i].to]-e[i].v);</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    n=read();rt=read();</span><br><span class="line">    for(int i=1;i&lt;n;i++)x=read(),y=read(),v=read(),add(x,y,v);</span><br><span class="line">    dfs(rt,0);printf(&quot;%lld\n&quot;,ans);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -99,7 +99,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://wtl666wtl.github.io/2016/05/06/5月做题记录/" data-title="5月做题记录 | wtl&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="http://wtl666wtl.github.io/2016/06/13/bzoj1060时态同步/" data-title="bzoj1060时态同步 | wtl&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -109,18 +109,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2016/06/13/bzoj1060时态同步/" title="bzoj1060时态同步">
+ <a href="/2016/06/13/bzoj1090字符串折叠/" title="bzoj1090字符串折叠">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  bzoj1060时态同步</span>
+  bzoj1090字符串折叠</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2016/05/05/Flag/"  title="Flag">
+<a href="/2016/05/06/5月做题记录/"  title="5月做题记录">
  <strong>NEXT:</strong><br/> 
- <span>Flag
+ <span>5月做题记录
 </span>
 </a>
 </div>
